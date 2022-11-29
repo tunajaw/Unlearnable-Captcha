@@ -2,14 +2,19 @@ import cv2
 import numpy as np
 import argparse
 from gen import CaptchaSequence
-from model import Model
+from model import model
 
-def train(dataset):
-    Gen_Train = CaptchaSequence(batch_size=8, steps=1, dataset=dataset)
-    Gen_Valid = CaptchaSequence(batch_size=8, steps=1, dataset=dataset)
+def train(dataset, batch_size=128):
+    Gen_Train = CaptchaSequence(batch_size=batch_size, steps=1000, dataset=dataset)
+    Gen_Valid = CaptchaSequence(batch_size=batch_size, steps=100, dataset=dataset)
     print('Generator Building Complete')
-    model = Model(model=None)
-    model.train(Gen_Train, Gen_Valid)
+    proxy_model = model(model=None)
+    print('strart training')
+    proxy_model.train(Gen_Train, Gen_Valid)
+    print('complete')
+
+def attack():
+    return 0
     
 
 if __name__ == "__main__":

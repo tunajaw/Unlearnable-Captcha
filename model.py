@@ -8,7 +8,7 @@ from tqdm import tqdm
 from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 from keras.optimizers import *
 
-class Model():
+class model():
     def __init__(self, height=64, width=128, n_len=4, n_class=36, model=None):
         '''
         CAPTCHA Break Model.
@@ -30,7 +30,7 @@ class Model():
             x = MaxPooling2D(2)(x)
 
         x = Flatten()(x)
-        x = Dropout(0.25)(x)
+        # x = Dropout(0.25)(x)
         x = [Dense(n_class, activation='softmax', name='c%d'%(i+1))(x) for i in range(n_len)]
         self.model = Model(inputs=input_tensor, outputs=x)
 
@@ -38,12 +38,13 @@ class Model():
         plot_model(self.model, to_file="model.png", show_shapes=True)
 
     def train(self, train_generator, test_generator):
+        self._plot_model()
         callbacks = [EarlyStopping(patience=3), CSVLogger('cnn.csv'), ModelCheckpoint('cnn_best.h5', save_best_only=True)]
 
         self.model.compile(loss='categorical_crossentropy',
-                    optimizer=Adam(1e-3, amsgrad=True), 
+                    optimizer=Adam(5e-2, amsgrad=True), 
                     metrics=['accuracy'])
-        self.model.fit_generator(train_generator, epochs=100, validation_data=test_generator, workers=4, use_multiprocessing=True,
+        self.model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks)
     
     def predict(self, X):

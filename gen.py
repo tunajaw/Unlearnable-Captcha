@@ -17,10 +17,14 @@ class CaptchaSequence(Sequence):
         self.height = height
         self.n_class = len(self.characters)
         self.generator = CaptchaGen(dataset=dataset, width=width, height=height, n_len=self.n_len)
+        self.X = None
+        self.y = None
     
+    # how many batches to train in a training epoch
     def __len__(self):
         return self.steps
 
+    # get full batch of data
     def __getitem__(self, idx):
         X = np.zeros((self.batch_size, self.height, self.width, 3), dtype=np.float32)
         y = [np.zeros((self.batch_size, self.n_class), dtype=np.uint8) for i in range(self.n_len)]

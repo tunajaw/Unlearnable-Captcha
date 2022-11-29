@@ -19,5 +19,7 @@ class CaptchaGen():
             characters = string.digits + string.ascii_uppercase
             random_str = ''.join([random.choice(characters) for j in range(self.n_len)])
             return self.generator.generate_image(random_str), random_str
+        elif(self.dataset == 'w'):
+            0
         else:
             raise ValueError(f'{self.dataset} is not a valid dataset.')
