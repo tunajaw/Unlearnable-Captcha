@@ -5,7 +5,7 @@ import random
 import tensorflow as tf
 import keras.backend as K
 from keras.utils import Sequence
-from .captcha import ImageCaptcha
+from .single_gen import ImageCaptcha
 
 class CaptchaSequence(Sequence):
     def __init__(self, characters, batch_size, steps, n_len=4, width=128, height=64, dataset=None):

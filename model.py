@@ -9,7 +9,7 @@ from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 from keras.optimizers import *
 
 class model():
-    def __init__(self, height=64, width=128, n_len=4, n_class=36, model=None):
+    def __init__(self, height=64, width=128, n_len=4, n_class=36, _model=None):
         '''
         CAPTCHA Break Model.
 
@@ -20,6 +20,7 @@ class model():
         model: which classification model to use
         '''
         # define training model
+
         input_tensor = Input((height, width, 3))
         x = input_tensor
         for i, n_cnn in enumerate([2, 2, 2, 2, 2]):
@@ -32,20 +33,20 @@ class model():
         x = Flatten()(x)
         # x = Dropout(0.25)(x)
         x = [Dense(n_class, activation='softmax', name='c%d'%(i+1))(x) for i in range(n_len)]
-        self.model = Model(inputs=input_tensor, outputs=x)
+        self._model = Model(inputs=input_tensor, outputs=x)
 
     def _plot_model(self):
-        plot_model(self.model, to_file="model.png", show_shapes=True)
+        plot_model(self._model, to_file="model.png", show_shapes=True)
 
     def train(self, train_generator, test_generator):
-        self._plot_model()
+        # self._plot_model()
         callbacks = [EarlyStopping(patience=3), CSVLogger('cnn.csv'), ModelCheckpoint('cnn_best.h5', save_best_only=True)]
 
-        self.model.compile(loss='categorical_crossentropy',
-                    optimizer=Adam(5e-2, amsgrad=True), 
+        self._model.compile(loss='categorical_crossentropy',
+                    optimizer=Adam(1e-3, amsgrad=True), 
                     metrics=['accuracy'])
-        self.model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
+        self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks)
     
     def predict(self, X):
-        return self.model.predict(X)
+        return self._model.predict(X)
