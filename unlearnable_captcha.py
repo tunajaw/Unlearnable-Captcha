@@ -19,7 +19,6 @@ class unlearnable_captcha():
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
     def load_proxy_model(self, model_path='./pretrained/cnn_best.h5') -> None:
-        # to-do: load our pretrained model
         self.proxy_model = load_model(model_path)
         
 
