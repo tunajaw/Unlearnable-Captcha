@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from captcha_seqence import CaptchaSequence
 from model import model
+from tensorflow.keras.models import load_model
 
 class unlearnable_captcha():
     def __init__(self, height=64, width=128, n_len=4) -> None:
@@ -19,7 +20,7 @@ class unlearnable_captcha():
 
     def load_proxy_model(self, model_path='./pretrained/cnn_best.h5') -> None:
         # to-do: load our pretrained model
-        self.proxy_model = ...
+        self.proxy_model = load_model(model_path)
         
 
     def _proxy_model_predict(self, X) -> np.array:
