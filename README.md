@@ -7,7 +7,16 @@ NTHUCS Machine Learning Final Project
 Run `python main.py -t` to train model.
 
 ### Arguments
-`-h`: CAPTCHA height (default: 60px)
-`-w`: CAPTCHA width (default: 160px)
+`-s`: CAPTCHA size, width height (default: 160px x 60px)
+
 `-l`: CAPTCHA length (default: 4 characters per CAPTCHA)
 
+## TO-do lists
+
+### Bugs
+* Resolve the problem of modifying size of CAPTCHA cannot train proxy model.
+
+### Functions
+* Load pretrained proxy model when `train=False`.
+
+* Construct attack model.
