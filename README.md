@@ -1,4 +1,4 @@
-# Unleanable-Captcha
+# Unlearnable-Captcha
 NTHUCS Machine Learning Final Project 
 
 ## Usage
