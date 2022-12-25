@@ -7,9 +7,10 @@ from IPython import display
 from tqdm import tqdm
 from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 from keras.optimizers import *
+import numpy as np
 
 class model():
-    def __init__(self, height=64, width=128, n_len=4, n_class=36, _model=None):
+    def __init__(self, height=64, width=128, n_len=4, n_class=36, _model=None) -> None:
         '''
         CAPTCHA Break Model.
 
@@ -35,10 +36,10 @@ class model():
         x = [Dense(n_class, activation='softmax', name='c%d'%(i+1))(x) for i in range(n_len)]
         self._model = Model(inputs=input_tensor, outputs=x)
 
-    def _plot_model(self):
+    def _plot_model(self) -> None:
         plot_model(self._model, to_file="model.png", show_shapes=True)
 
-    def train(self, train_generator, test_generator):
+    def train(self, train_generator, test_generator) -> None:
         # self._plot_model()
         callbacks = [EarlyStopping(patience=3), CSVLogger('cnn.csv'), ModelCheckpoint('cnn_best.h5', save_best_only=True)]
 
@@ -48,5 +49,5 @@ class model():
         self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks)
     
-    def predict(self, X):
+    def predict(self, X) -> np.array:
         return self._model.predict(X)

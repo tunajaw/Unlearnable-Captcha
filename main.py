@@ -3,29 +3,28 @@ import numpy as np
 import argparse
 from captcha_seqence import CaptchaSequence
 from model import model
+from unlearnable_captcha import unlearnable_captcha
 
-def train(dataset, batch_size=128):
-    Gen_Train = CaptchaSequence(batch_size=batch_size, steps=1000, dataset=dataset)
-    Gen_Valid = CaptchaSequence(batch_size=batch_size, steps=100, dataset=dataset)
-    print('Generator Building Complete')
-    proxy_model = model(_model=None)
-    print('strart training')
-    proxy_model.train(Gen_Train, Gen_Valid)
-    print('complete')
-
-def attack():
-    return 0
-    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    # cannot use "-h" argument since main.py use "-h" argument to show help messages  
+    parser.add_argument("-s", "--size", nargs='+', required=False, type=int, default=[80, 30])
+    parser.add_argument("-l", "--len", required=False, type=int, default=4)
     parser.add_argument("-d", "--dataset", required=False, type=str, default='python_captcha')
     parser.add_argument("-t", "--train", action="store_true")
     parser.add_argument("-a", "--attack", action="store_true")
 
     args = parser.parse_args()
 
+    captcha = unlearnable_captcha(n_len=args.len)
+
     if(args.train):
-        train(args.dataset)
+        captcha.train(batch_size=128, dataset=args.dataset)
+    else:
+        captcha.load_proxy_model()
+
+    if(args.attack):
+        captcha.attack()
     
     
