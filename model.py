@@ -8,6 +8,7 @@ from tqdm import tqdm
 from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 from keras.optimizers import *
 import numpy as np
+import string
 
 class model():
     def __init__(self, height=64, width=128, n_len=4, n_class=36, _model=None) -> None:
@@ -50,4 +51,10 @@ class model():
                             callbacks=callbacks)
     
     def predict(self, X) -> np.array:
-        return self._model.predict(X)
+        characters = string.digits + string.ascii_uppercase
+        if X.ndim == 3:  # only one image
+            np.expand_dims(X, axis=0)
+        predict_prob = self._model.predict(X)
+        y = np.argmax(np.array(predict_prob), axis=2)
+        predict_characters = ''.join([characters[z] for z in y])
+        return predict_characters
