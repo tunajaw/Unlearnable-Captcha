@@ -52,9 +52,12 @@ class model():
     
     def predict(self, X) -> np.array:
         characters = string.digits + string.ascii_uppercase
+
         if X.ndim == 3:  # only one image
             np.expand_dims(X, axis=0)
+
         predict_prob = self._model.predict(X)
         y = np.argmax(np.array(predict_prob), axis=2)
         predict_characters = ''.join([characters[z] for z in y])
+        
         return predict_characters
