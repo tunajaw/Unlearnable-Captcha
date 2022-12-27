@@ -55,18 +55,18 @@ class model():
                             callbacks=callbacks)
     
     def predict(self, X) -> string:
-
-        if X.ndim == 3:  # only one image
+        if X.ndim == 3:  # (width, height, channel)
             np.expand_dims(X, axis=0)
-
+        # print("X shape:" + str(X.shape))    # (1, 64, 128, 3)
         predict_prob = self._model.predict(X)
-        y = np.argmax(np.array(predict_prob), axis=2)
-        print(y)
-        predict_characters = ''.join([self.characters[z] for z in y])
+        predict_characters = self.decode(predict_prob)
         
         return predict_characters
 
     def decode(self, y) -> string:
-
+        y = np.array(y)        
+        # print(y.shape)   # (4,1,36)
+        y = np.resize(y, (y.shape[0],y.shape[2])) # delete dim 1
+        y = np.argmax(np.array(y), axis=1)
         predict_characters = ''.join([self.characters[z] for z in y])
         return predict_characters
