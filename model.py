@@ -21,6 +21,7 @@ class model():
         n_class: how many possible characters in CAPTCHA
         model: which classification model to use
         '''
+        self.characters = string.digits + string.ascii_uppercase
         # define training model
 
         input_tensor = Input((height, width, 3))
@@ -40,6 +41,9 @@ class model():
     def _plot_model(self) -> None:
         plot_model(self._model, to_file="model.png", show_shapes=True)
 
+    def load_model(self, model_path) -> None:
+        self._model = load_model(model_path)
+
     def train(self, train_generator, test_generator) -> None:
         # self._plot_model()
         callbacks = [EarlyStopping(patience=3), CSVLogger('cnn.csv'), ModelCheckpoint('cnn_best.h5', save_best_only=True)]
@@ -50,14 +54,19 @@ class model():
         self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks)
     
-    def predict(self, X) -> np.array:
-        characters = string.digits + string.ascii_uppercase
+    def predict(self, X) -> string:
 
         if X.ndim == 3:  # only one image
             np.expand_dims(X, axis=0)
 
         predict_prob = self._model.predict(X)
         y = np.argmax(np.array(predict_prob), axis=2)
-        predict_characters = ''.join([characters[z] for z in y])
+        print(y)
+        predict_characters = ''.join([self.characters[z] for z in y])
         
+        return predict_characters
+
+    def decode(self, y) -> string:
+
+        predict_characters = ''.join([self.characters[z] for z in y])
         return predict_characters
