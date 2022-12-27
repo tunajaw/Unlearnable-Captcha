@@ -36,10 +36,10 @@ class unlearnable_captcha():
             print(test_y)
             print(test_pred)
 
-    def _proxy_model_predict(self, X) -> np.array:
+    def _proxy_model_predict(self, X) -> list:
         return self.proxy_model.predict(X)
 
-    def _decode(self, y) -> string:
+    def _decode(self, y) -> list:
         return self.proxy_model.decode(y)
 
     def attack(self):

@@ -54,7 +54,7 @@ class model():
         self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks)
     
-    def predict(self, X) -> string:
+    def predict(self, X) -> list:
         if X.ndim == 3:  # (width, height, channel)
             np.expand_dims(X, axis=0)
         # print("X shape:" + str(X.shape))    # (1, 64, 128, 3)
@@ -63,10 +63,14 @@ class model():
         
         return predict_characters
 
-    def decode(self, y) -> string:
+    def decode(self, y) -> list:
         y = np.array(y)        
         # print(y.shape)   # (4,1,36)
-        y = np.resize(y, (y.shape[0],y.shape[2])) # delete dim 1
-        y = np.argmax(np.array(y), axis=1)
-        predict_characters = ''.join([self.characters[z] for z in y])
+        y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
+        y = np.argmax(np.array(y), axis=2)
+        # print(y.shape)
+        predict_characters = []
+        for i in range(0,y.shape[0]):
+            captcha = ''.join(self.characters[z] for z in y[i])
+            predict_characters.append(captcha)
         return predict_characters
