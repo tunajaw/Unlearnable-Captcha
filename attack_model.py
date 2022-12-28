@@ -45,16 +45,6 @@ class FGSM():
         attacked_images = np.array([])
 
         for image, label in zip(images, labels):
-            # pred = model.predicted_class(image)
-            
-            
-            # target = np.vstack(K.one_hot(pred, self.n_class))
-            # target = target[:, np.newaxis]
-            print(image[0])
-            
-            # assert 0
-            # loss = K.categorical_crossentropy(model._model.output, target)
-            # gradients = K.gradients(loss, image)
 
             with tf.GradientTape() as gtape:
 
@@ -62,28 +52,28 @@ class FGSM():
                 gtape.watch(image)
 
                 pred = model._model(image)
-                print(pred)
+                # print(pred)
                 #loss = K.categorical_crossentropy(model._model.output, target)
                 loss = losses.categorical_crossentropy(label, pred)
-                print(loss)
+                # print(loss)
 
             gradients = gtape.gradient(loss, image)#model._model.input)
-            print(gradients)
+            # print(gradients)
             sign = tf.sign(gradients)
-            print(sign)
+            # print(sign)
 
             noise = self.epsilon * sign
-            print(noise)
+            # print(noise)
 
             adversarial = tf.add(image, noise)
-            print(adversarial)
+            # print(adversarial)
 
             adversarial_np = adversarial.numpy()
             adversarial_np = np.clip(adversarial_np, 0, 1)
-            print("adversarial_np")
-            print(adversarial_np.shape)
+            # print("adversarial_np")
+            # print(adversarial_np.shape)
             attacked_images = np.append(attacked_images, adversarial_np)
         input_shape = np.array(images).shape
         attacked_images = attacked_images.reshape(input_shape[0], input_shape[2], input_shape[3], input_shape[4])
-        print(np.array(images).shape)
+        # print(np.array(images).shape)
         return attacked_images
