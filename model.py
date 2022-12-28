@@ -62,12 +62,22 @@ class model():
         
         return predict_characters
 
+    def predicted_class(self, X):
+        if X.ndim == 3:  # (width, height, channel)
+            np.expand_dims(X, axis=0)
+
+        y = self._model.predict(X)
+        y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)    
+        y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
+        y = np.argmax(np.array(y), axis=2)
+        return y
+
     def decode(self, y) -> list:
         y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)    
         y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
         y = np.argmax(np.array(y), axis=2)  # y.shape = (num of images, digits in captcha)
         predict_characters = []
-        for i in range(0,y.shape[0]):
+        for i in range(0, y.shape[0]):
             captcha = ''.join(self.characters[z] for z in y[i])
             predict_characters.append(captcha)
         return predict_characters

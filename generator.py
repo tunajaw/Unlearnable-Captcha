@@ -1,9 +1,6 @@
 # Ref: https://github.com/ypwhs/captcha_break
 
 import numpy as np
-import random
-import tensorflow as tf
-import keras.backend as K
 from keras.utils import Sequence
 from .single_gen import ImageCaptcha
 

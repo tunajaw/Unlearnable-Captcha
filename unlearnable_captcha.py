@@ -3,13 +3,15 @@ import numpy as np
 import string
 from captcha_seqence import CaptchaSequence
 from model import model
+from attack_model import attack_Model
 
 class unlearnable_captcha():
-    def __init__(self, height=64, width=128, n_len=4) -> None:
+    def __init__(self, height=64, width=128, n_len=4, n_class=36) -> None:
         self.height = height
         self.width = width
         self.n_len = n_len
         self.proxy_model = None
+        self.n_class = n_class
         # to-do : Not sure initialize dataset
         self.dataset = 'python_captcha'
 
@@ -21,7 +23,7 @@ class unlearnable_captcha():
         self.proxy_model = model(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
-    def load_proxy_model(self, model_path='./pretrained/cnn_best.h5', test=True) -> None:
+    def load_proxy_model(self, model_path='./pretrained/cnn_best.h5', test=False) -> None:
         # load pretrained model
         self.proxy_model = model(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.load_model(model_path)
@@ -43,4 +45,19 @@ class unlearnable_captcha():
         return self.proxy_model.decode(y)
 
     def attack(self):
-        return 0
+        attack_model = attack_Model(self.n_class, ['FGSM'])
+
+        Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset)
+        test_img, one_hot_y = Gen[0]
+        # test if model is 
+        test_pred = self._proxy_model_predict(test_img)
+        # decode one-hot label back to string
+        test_y = self._decode(one_hot_y)
+        print(test_y)
+        print(test_pred)
+
+        a_img = attack_model.test_single_attack_model('FGSM', [test_img], [one_hot_y], self.proxy_model)
+        print('fns')
+        a_pred = self._proxy_model_predict(a_img)
+        print(a_pred)
+
