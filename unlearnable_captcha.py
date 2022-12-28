@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import string
 from captcha_seqence import CaptchaSequence
-from model import model
+from modelA import modelA
 from attack_model import attack_Model
 from tqdm import tqdm
 
@@ -21,12 +21,12 @@ class unlearnable_captcha():
         self.dataset = dataset
         Gen_Train = CaptchaSequence(batch_size=batch_size, steps=1000, dataset=dataset)
         Gen_Valid = CaptchaSequence(batch_size=batch_size, steps=100, dataset=dataset)
-        self.proxy_model = model(height=self.height, width=self.width, n_len=self.n_len, _model=None)
+        self.proxy_model = modelA(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
     def load_proxy_model(self, model_path='./pretrained/cnn_best.h5', test=False) -> None:
         # load pretrained model
-        self.proxy_model = model(height=self.height, width=self.width, n_len=self.n_len, _model=None)
+        self.proxy_model = modelA(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.load_model(model_path)
         # test pretrained model
         if(test):
@@ -49,7 +49,7 @@ class unlearnable_captcha():
         attack_model = attack_Model(self.n_class, ['FGSM'])
 
         s, f = 0, 0
-        for _ in tqdm(range(1)):
+        for _ in tqdm(range(5)):
 
             Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset)
             test_img, one_hot_y = Gen[0]
@@ -60,7 +60,7 @@ class unlearnable_captcha():
             print(test_y)
             print(test_pred)
 
-            a_img = attack_model.test_single_attack_model('FGSM', [test_img], [one_hot_y], self.proxy_model)
+            a_img = attack_model.test_single_attack_model('FGSM', test_img, one_hot_y, self.proxy_model)
             a_pred = self._proxy_model_predict(a_img)
             print(a_pred)
 

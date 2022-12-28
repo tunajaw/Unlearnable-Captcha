@@ -44,36 +44,36 @@ class FGSM():
 
         attacked_images = np.array([])
 
-        for image, label in zip(images, labels):
 
-            with tf.GradientTape() as gtape:
+        with tf.GradientTape() as gtape:
 
-                image = tf.convert_to_tensor(image)
-                gtape.watch(image)
+            images = tf.convert_to_tensor(images)
+            gtape.watch(images)
 
-                pred = model._model(image)
-                # print(pred)
-                #loss = K.categorical_crossentropy(model._model.output, target)
-                loss = losses.categorical_crossentropy(label, pred)
-                # print(loss)
+            preds = model._model(images)
+            # print(pred)
+            #loss = K.categorical_crossentropy(model._model.output, target)
+            loss = losses.categorical_crossentropy(labels, preds)
+            # print(loss)
 
-            gradients = gtape.gradient(loss, image)#model._model.input)
-            # print(gradients)
-            sign = tf.sign(gradients)
-            # print(sign)
+        gradients = gtape.gradient(loss, images)#model._model.input)
+        # print(gradients)
+        sign = tf.sign(gradients)
+        # print(sign)
 
-            noise = self.epsilon * sign
-            # print(noise)
+        noise = self.epsilon * sign
+        # print(noise)
 
-            adversarial = tf.add(image, noise)
-            # print(adversarial)
+        adversarial = tf.add(images, noise)
+        # print(adversarial)
 
-            adversarial_np = adversarial.numpy()
-            adversarial_np = np.clip(adversarial_np, 0, 1)
-            # print("adversarial_np")
-            # print(adversarial_np.shape)
-            attacked_images = np.append(attacked_images, adversarial_np)
+        adversarial_np = adversarial.numpy()
+        adversarial_np = np.clip(adversarial_np, 0, 1)
+        # print("adversarial_np")
+        # print(adversarial_np.shape)
+        attacked_images = np.append(attacked_images, adversarial_np)
+
         input_shape = np.array(images).shape
-        attacked_images = attacked_images.reshape(input_shape[0], input_shape[2], input_shape[3], input_shape[4])
+        attacked_images = attacked_images.reshape(input_shape)
         # print(np.array(images).shape)
         return attacked_images

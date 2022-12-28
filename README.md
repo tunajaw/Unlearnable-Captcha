@@ -7,6 +7,9 @@ NTHUCS Machine Learning Final Project
 Run `python main.py -t` to train model.
 
 ### Arguments
+
+`-c`: CAPTCHA classes (default: 36 -> Uppercase characters + numbers)
+
 `-s`: CAPTCHA size, width height (default: 160px x 60px)
 
 `-l`: CAPTCHA length (default: 4 characters per CAPTCHA)
@@ -17,10 +20,8 @@ Run `python main.py -t` to train model.
 * Resolve the problem of modifying size of CAPTCHA cannot train proxy model.
 
 ### Functions
-* Data preprocessing: Reshape input data to 128x64.
+* Construct more proxy model.
 
-* Load pretrained proxy model when `train=False`.
+* Construct more attack model.
 
-* Construct attack model.
-
-* Generate predicted values. (Github ref. repo function: decode)
+* Iterating attack until every alphabet is attacked sussceefully.

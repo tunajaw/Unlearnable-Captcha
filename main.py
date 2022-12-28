@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import argparse
 from captcha_seqence import CaptchaSequence
-from model import model
 from unlearnable_captcha import unlearnable_captcha
 
 

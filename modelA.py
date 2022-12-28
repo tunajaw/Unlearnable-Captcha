@@ -10,7 +10,7 @@ from keras.optimizers import *
 import numpy as np
 import string
 
-class model():
+class modelA():
     def __init__(self, height=64, width=128, n_len=4, n_class=36, _model=None) -> None:
         '''
         CAPTCHA Break Model.
@@ -54,15 +54,15 @@ class model():
         self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks)
     
-    def predict(self, X) -> list:
+    def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)
             np.expand_dims(X, axis=0)
         predict_prob = self._model.predict(X)
         predict_characters = self.decode(predict_prob)
         
-        return predict_characters
+        return np.array(predict_characters)
 
-    def predicted_class(self, X):
+    def predicted_class(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)
             np.expand_dims(X, axis=0)
 
@@ -70,9 +70,9 @@ class model():
         y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)    
         y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
         y = np.argmax(np.array(y), axis=2)
-        return y
+        return np.array(y)
 
-    def decode(self, y) -> list:
+    def decode(self, y) -> np.ndarray:
         y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)    
         y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
         y = np.argmax(np.array(y), axis=2)  # y.shape = (num of images, digits in captcha)
@@ -80,4 +80,4 @@ class model():
         for i in range(0, y.shape[0]):
             captcha = ''.join(self.characters[z] for z in y[i])
             predict_characters.append(captcha)
-        return predict_characters
+        return np.array(predict_characters)
