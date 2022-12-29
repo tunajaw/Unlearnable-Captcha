@@ -74,7 +74,7 @@ class unlearnable_captcha():
             # cv2.imwrite('attacked.jpg', np.array(a_img[0]*255).astype(np.uint8))
             # cv2.imwrite('attacked2.jpg', np.array(a_img[1]*255).astype(np.uint8))
         
-        print(f'proxy model accuracy: {(s+f)/test_time}%')
-        print(f'attack success: {s}/{s+f}, {test_time*s/(s+f):.2f}%')
-        print(f'attack failed: {f}/{s+f}, {test_time*f/(s+f):.2f}%')
+        print(f'proxy model accuracy: {(s+f)/test_time*100}%')
+        print(f'attack success: {s}/{s+f}, {100*s/(s+f):.2f}%')
+        print(f'attack failed: {f}/{s+f}, {100*f/(s+f):.2f}%')
 
