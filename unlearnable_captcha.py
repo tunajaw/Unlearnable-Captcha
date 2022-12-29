@@ -46,7 +46,7 @@ class unlearnable_captcha():
         return self.proxy_model.decode(y)
 
     def attack(self):
-        attack_model = attack_Model(self.n_class, ['iFGSM'])
+        attack_model = attack_Model(self.n_class, ['FGSM'])
 
         s, f = 0, 0
         for _ in tqdm(range(1)):
@@ -59,7 +59,8 @@ class unlearnable_captcha():
             test_y = self._decode(one_hot_y)
             print(test_y)
             print(test_pred)
-
+            cv2.imwrite('ori.jpg', np.array(test_img[0]*255).astype(np.uint8))
+            cv2.imwrite('ori2.jpg', np.array(test_img[1]*255).astype(np.uint8))
             a_img = attack_model.attack('FGSM', test_img, test_y, one_hot_y, self.proxy_model)
             a_pred = self._proxy_model_predict(a_img)
             print(f'final: {a_pred}')
@@ -68,9 +69,7 @@ class unlearnable_captcha():
             elif((test_pred[0]==test_y[0]) and (test_pred[0]==a_pred[0])): f += 1
             
             print(test_img.shape)
-            cv2.imwrite('ori.jpg', np.array(test_img[0]*255).astype(np.uint8))
             cv2.imwrite('attacked.jpg', np.array(a_img[0]*255).astype(np.uint8))
-            cv2.imwrite('ori2.jpg', np.array(test_img[1]*255).astype(np.uint8))
             cv2.imwrite('attacked2.jpg', np.array(a_img[1]*255).astype(np.uint8))
         
         print(f'proxy model accuracy: {s+f}%')

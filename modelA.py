@@ -58,17 +58,40 @@ class modelA():
     def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)
             np.expand_dims(X, axis=0)
-        predict_prob = self._model.predict(X)
+        predict_prob = self._model.predict(X, verbose=0)
         predict_characters = self.decode(predict_prob)
         
         return np.array(predict_characters)
 
     def decode(self, y) -> np.ndarray:
-        y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)    
-        y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
-        y = np.argmax(np.array(y), axis=2)  # y.shape = (num of images, digits in captcha)
+        '''
+        Why this shouldn't work:
+            'resize' shuffles the order of text sequences.
+            ex.
+                n_len=4, n_img=3, n_class=2(A=0, B=1)
+                y = [[[0.8 0.2][0.7 0.3][0.1 0.9]]
+                     [[0.7 0.3][0.4 0.6][0.2 0.8]]
+                     [[0.1 0.9][0.2 0.8][0.9 0.1]]
+                     [[1.0 0.0][0.1 0.9][0.8 0.3]]] -> ['AABA', 'ABBB', 'BBAA'] (read by columns)
+
+                After resize:
+                y = [[[0.8 0.2][0.7 0.3][0.1 0.9][0.7 0.3]]
+                     [[0.4 0.6][0.2 0.8][0.1 0.9][0.2 0.8]]
+                     [[0.9 0.1][1.0 0.0][0.1 0.9][0.8 0.3]]]  -> ['AABA', 'BBBB', 'AABA'] (read by rows)
+
+        '''
+        # y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)   
+        # y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
+        # y = np.argmax(np.array(y), axis=2)  # y.shape = (num of images, digits in captcha)
+        # predict_characters = []
+        # for i in range(0, y.shape[0]):
+        #     captcha = ''.join(self.characters[z] for z in y[i])
+        #     predict_characters.append(captcha)
+
+        y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)
         predict_characters = []
-        for i in range(0, y.shape[0]):
-            captcha = ''.join(self.characters[z] for z in y[i])
+        for i in range(0, y.shape[1]):
+            single = np.argmax(np.array([y[:, i, :]]), axis=2)  # y.shape = (num of images, digits in captcha)
+            captcha = ''.join(self.characters[z] for z in single[0])
             predict_characters.append(captcha)
         return np.array(predict_characters)
