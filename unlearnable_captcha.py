@@ -6,8 +6,8 @@ from modelA import modelA
 from attack_model import attack_Model
 from tqdm import tqdm
 import skimage
-from skimage import data
-from skimage import transform
+#from skimage import data
+#from skimage import transform
 
 
 class unlearnable_captcha():
@@ -19,7 +19,7 @@ class unlearnable_captcha():
         self.n_class = n_class
         # to-do : Not sure initialize dataset
         self.dataset = 'python_captcha'
-        self.dataset =skimage.transform.resize(self.dataset,(64,128))
+        #self.dataset =skimage.transform.resize(self.dataset,(64,128))
 
 
     def train(self, batch_size=128, dataset=None) -> None:
