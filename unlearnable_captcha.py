@@ -1,8 +1,10 @@
-mport cv2
+import cv2
 import numpy as np
 import string
 from captcha_seqence import CaptchaSequence
-from model import model
+from modelA import modelA
+from attack_model import attack_Model
+from tqdm import tqdm
 import skimage
 from skimage import data
 from skimage import transform
