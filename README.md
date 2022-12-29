@@ -6,6 +6,9 @@ NTHUCS Machine Learning Final Project
 ### Training
 Run `python main.py -t` to train model.
 
+### Attack
+Run `python main.py -a` to attack images
+
 ### Arguments
 
 `-c`: CAPTCHA classes (default: 36 -> Uppercase characters + numbers)
