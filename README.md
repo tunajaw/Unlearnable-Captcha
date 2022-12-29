@@ -7,7 +7,16 @@ NTHUCS Machine Learning Final Project
 Run `python main.py -t` to train model.
 
 ### Attack
-Run `python main.py -a` to attack images
+Run `python main.py -a` to attack images.
+
+Implemented attack model:
+
+* FGSM
+
+* IFGSM
+
+Adjust model name in `attack_model.attack()` in `unlearnable_captcha.attack()`, number of generate images in `tqdm` for-loop also in `unlearnable_captcha.attack()`.
+
 
 ### Arguments
 

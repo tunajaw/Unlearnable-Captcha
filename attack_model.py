@@ -3,16 +3,20 @@ from keras import losses
 import keras.backend as K
 import sys
 import tensorflow as tf
+import cv2
 
 
 class attack_Model():
-    def __init__(self, n_class, attack_method) -> None:
+    def __init__(self, n_class, attack_method=None) -> None:
         # constants: must update when more attack methods are added into this repo.
         self.IMPLEMENTED_ATTACKS = ('FGSM', 'iFGSM')
         # variables
         self.epsilon = 4.0 / 256
         self.n_class = n_class
         self._attack_method = {}
+        if(attack_method == None):
+            attack_method = self.IMPLEMENTED_ATTACKS
+
         for a in attack_method:
             if(str(a) not in self.IMPLEMENTED_ATTACKS):
                 raise NotImplementedError(f'{a} is not implemented. Available attack models: {self.IMPLEMENTED_ATTACKS}')
@@ -30,7 +34,7 @@ class attack_Model():
 
     # Iteratively attack model
     # DO NOT CALL THIS FUNCTION AT SUBCLASS!!!
-    def attack(self, model_name, images, labels, one_hot_labels, proxy_model, break_time=10):
+    def attack(self, model_name, images, labels, one_hot_labels, proxy_model, break_time=1):
         
         attacked_imgs = None
         # print(images.shape)
@@ -59,7 +63,7 @@ class attack_Model():
             else:
                 attacked_imgs = np.vstack((attacked_imgs, attacked_img))
 
-        print(attacked_imgs.shape)
+        # print(attacked_imgs.shape)
         return attacked_imgs
         
         
@@ -123,8 +127,8 @@ class iFGSM():
         attacked_images_set = np.array([])
         attacked_images = images
         iter_time = min(self.epsilon * 256 + 4, 1.25*(self.epsilon * 256))
-        alpha = (self.epsilon * 256) / iter_time
-        for i in range(0, int(iter_time)):
+        alpha = self.epsilon / iter_time
+        for _ in range(0, int(iter_time)):
             with tf.GradientTape() as gtape:
                 attacked_images = tf.convert_to_tensor(attacked_images)
                 gtape.watch(attacked_images)
@@ -141,9 +145,6 @@ class iFGSM():
             adversarial_np = adversarial.numpy()
             adversarial_np = np.clip(adversarial_np, 0, 1)
             attacked_images = adversarial_np
-            # print("adversarial_np")
-            # print(adversarial_np.shape)
-
         
         attacked_images_set = np.append(attacked_images_set, adversarial_np)
 
