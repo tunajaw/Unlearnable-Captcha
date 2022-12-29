@@ -46,7 +46,7 @@ class unlearnable_captcha():
         return self.proxy_model.decode(y)
 
     def attack(self):
-        attack_model = attack_Model(self.n_class, ['FGSM'])
+        attack_model = attack_Model(self.n_class, ['iFGSM'])
 
         s, f = 0, 0
         for _ in tqdm(range(1)):
