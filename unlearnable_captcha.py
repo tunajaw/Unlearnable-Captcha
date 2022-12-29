@@ -49,9 +49,9 @@ class unlearnable_captcha():
         attack_model = attack_Model(self.n_class, ['FGSM'])
 
         s, f = 0, 0
-        for _ in tqdm(range(5)):
+        for _ in tqdm(range(1)):
 
-            Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset)
+            Gen = CaptchaSequence(batch_size=2, steps=1, dataset=self.dataset)
             test_img, one_hot_y = Gen[0]
             # test if model is 
             test_pred = self._proxy_model_predict(test_img)
@@ -60,9 +60,9 @@ class unlearnable_captcha():
             print(test_y)
             print(test_pred)
 
-            a_img = attack_model.test_single_attack_model('FGSM', test_img, one_hot_y, self.proxy_model)
+            a_img = attack_model.attack('FGSM', test_img, test_y, one_hot_y, self.proxy_model)
             a_pred = self._proxy_model_predict(a_img)
-            print(a_pred)
+            print(f'final: {a_pred}')
 
             if((test_pred[0]==test_y[0]) and (test_pred[0]!=a_pred[0])): s += 1
             elif((test_pred[0]==test_y[0]) and (test_pred[0]==a_pred[0])): f += 1
@@ -70,6 +70,8 @@ class unlearnable_captcha():
             print(test_img.shape)
             cv2.imwrite('ori.jpg', np.array(test_img[0]*255).astype(np.uint8))
             cv2.imwrite('attacked.jpg', np.array(a_img[0]*255).astype(np.uint8))
+            cv2.imwrite('ori2.jpg', np.array(test_img[1]*255).astype(np.uint8))
+            cv2.imwrite('attacked2.jpg', np.array(a_img[1]*255).astype(np.uint8))
         
         print(f'proxy model accuracy: {s+f}%')
         print(f'attack success: {s}/{s+f}, {100*s/(s+f):.2f}%')

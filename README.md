@@ -20,6 +20,8 @@ Run `python main.py -t` to train model.
 * Resolve the problem of modifying size of CAPTCHA cannot train proxy model.
 
 ### Functions
+* Let user input strings so that module can output specific CAPTCHA ground truth is the string.
+
 * Construct more proxy model.
 
 * Construct more attack model.

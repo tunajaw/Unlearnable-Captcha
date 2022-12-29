@@ -21,16 +21,48 @@ class attack_Model():
                 self._attack_method[str(a)] = getattr(sys.modules[__name__], str(a))(self.epsilon, self.n_class)
 
 
-    def test_single_attack_model(self, model_name, images, label, proxy_model):
+    def test_single_attack_model(self, model_name, images, one_hot_label, proxy_model):
         model_name = str(model_name)
         if(model_name not in self._attack_method.keys()):
             raise ValueError(f'{model_name} is not in attack model. Your attack model uses {self._attack_method.keys()}.')
         else:
-            return self._attack_method[model_name].generate_adversarial(images, label, proxy_model)
+            return self._attack_method[model_name].generate_adversarial(images, one_hot_label, proxy_model)
 
+    # Iteratively attack model
     # DO NOT CALL THIS FUNCTION AT SUBCLASS!!!
-    def attack():
-        return 0
+    def attack(self, model_name, images, labels, one_hot_labels, proxy_model, break_time=10):
+        
+        attacked_imgs = None
+        # print(images.shape)
+        # print(labels.shape)
+        one_hot_labels = np.array(one_hot_labels)
+
+        for i in range(images.shape[0]):
+            print(i)
+            _attacked = False
+            _break = break_time
+            attacked_img = np.array([images[i]])
+            one_hot_label = np.array([one_hot_labels[:, i, :]]).reshape((one_hot_labels.shape[0], 1, one_hot_labels.shape[2]))
+            label = [labels[i]]
+
+            while((not _attacked) and _break):
+                _break -= 1
+                attacked_img = self.test_single_attack_model(model_name, attacked_img, one_hot_label, proxy_model)
+                pred = proxy_model.predict(attacked_img)
+                # check if every alphabet is break
+                print(pred)
+                if(sum([pred[0][j]!=label[0][j] for j in range(proxy_model.n_len)]) == proxy_model.n_len):
+                    _attacked = True
+            
+            if(attacked_imgs is None):
+                attacked_imgs = attacked_img
+            else:
+                attacked_imgs = np.vstack((attacked_imgs, attacked_img))
+
+        print(attacked_imgs.shape)
+        return attacked_imgs
+        
+        
 
 class FGSM():
     def __init__(self, epsilon, n_class) -> None:

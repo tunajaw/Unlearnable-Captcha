@@ -22,6 +22,7 @@ class modelA():
         model: which classification model to use
         '''
         self.characters = string.digits + string.ascii_uppercase
+        self.n_len = n_len
         # define training model
 
         input_tensor = Input((height, width, 3))
@@ -61,16 +62,6 @@ class modelA():
         predict_characters = self.decode(predict_prob)
         
         return np.array(predict_characters)
-
-    def predicted_class(self, X) -> np.ndarray:
-        if X.ndim == 3:  # (width, height, channel)
-            np.expand_dims(X, axis=0)
-
-        y = self._model.predict(X)
-        y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)    
-        y = np.resize(y, (y.shape[1],y.shape[0],y.shape[2])) # change dim 1 and dim 0
-        y = np.argmax(np.array(y), axis=2)
-        return np.array(y)
 
     def decode(self, y) -> np.ndarray:
         y = np.array(y)    # y.shape = (digits in captcha, num of images, # classes)    
