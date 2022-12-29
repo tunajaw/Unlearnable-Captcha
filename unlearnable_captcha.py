@@ -50,7 +50,8 @@ class unlearnable_captcha():
         attack_model = attack_Model(self.n_class)
 
         s, f = 0, 0
-        for _ in tqdm(range(100)):
+        test_time = 50
+        for _ in tqdm(range(test_time)):
 
             Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset)
             test_img, one_hot_y = Gen[0]
@@ -58,14 +59,15 @@ class unlearnable_captcha():
             test_pred = self._proxy_model_predict(test_img)
             # decode one-hot label back to string
             test_y = self._decode(one_hot_y)
-            print(test_y)
-            print(test_pred)
+            print(f'ground truth: {test_y}')
+            print(f'predicted: {test_pred}')
             # cv2.imwrite('ori.jpg', np.array(test_img[0]*255).astype(np.uint8))
             # cv2.imwrite('ori2.jpg', np.array(test_img[1]*255).astype(np.uint8))
-            a_img = attack_model.attack('iFGSM', test_img, test_y, one_hot_y, self.proxy_model)
+            a_img = attack_model.attack('iFGSM', test_img, test_y, one_hot_y, self.proxy_model, iterative=True)
             a_pred = self._proxy_model_predict(a_img)
-            print(f'final: {a_pred}')
-
+            
+            print(f'after attack: {a_pred}')
+            print('------------')
             if((test_pred[0]==test_y[0]) and (test_pred[0]!=a_pred[0])): s += 1
             elif((test_pred[0]==test_y[0]) and (test_pred[0]==a_pred[0])): f += 1
             
@@ -73,7 +75,7 @@ class unlearnable_captcha():
             # cv2.imwrite('attacked.jpg', np.array(a_img[0]*255).astype(np.uint8))
             # cv2.imwrite('attacked2.jpg', np.array(a_img[1]*255).astype(np.uint8))
         
-        print(f'proxy model accuracy: {s+f}%')
+        print(f'proxy model accuracy: {(s+f)/test_time*100}%')
         print(f'attack success: {s}/{s+f}, {100*s/(s+f):.2f}%')
         print(f'attack failed: {f}/{s+f}, {100*f/(s+f):.2f}%')
 

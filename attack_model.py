@@ -34,15 +34,15 @@ class attack_Model():
 
     # Iteratively attack model
     # DO NOT CALL THIS FUNCTION AT SUBCLASS!!!
-    def attack(self, model_name, images, labels, one_hot_labels, proxy_model, break_time=1):
-        
+    def attack(self, model_name, images, labels, one_hot_labels, proxy_model, iterative=True):
+        break_time = 10 if iterative else 1
         attacked_imgs = None
         # print(images.shape)
         # print(labels.shape)
         one_hot_labels = np.array(one_hot_labels)
 
         for i in range(images.shape[0]):
-            print(i)
+            # print(i)
             _attacked = False
             _break = break_time
             attacked_img = np.array([images[i]])
@@ -54,7 +54,6 @@ class attack_Model():
                 attacked_img = self.test_single_attack_model(model_name, attacked_img, one_hot_label, proxy_model)
                 pred = proxy_model.predict(attacked_img)
                 # check if every alphabet is break
-                print(pred)
                 if(sum([pred[0][j]!=label[0][j] for j in range(proxy_model.n_len)]) == proxy_model.n_len):
                     _attacked = True
             
