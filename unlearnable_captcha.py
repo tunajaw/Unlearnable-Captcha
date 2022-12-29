@@ -9,12 +9,14 @@ import skimage
 from skimage import data
 from skimage import transform
 
+
 class unlearnable_captcha():
-    def __init__(self, height=64, width=128, n_len=4) -> None:
+    def __init__(self, height=64, width=128, n_len=4, n_class=36) -> None:
         self.height = height
         self.width = width
         self.n_len = n_len
         self.proxy_model = None
+        self.n_class = n_class
         # to-do : Not sure initialize dataset
         self.dataset = 'python_captcha'
         self.dataset =skimage.transform.resize(self.dataset,(64,128))
