@@ -58,7 +58,7 @@ class unlearnable_captcha():
         attack_model = attack_Model(self.n_class)
 
         s, f = 0, 0
-        test_time = 50
+        test_time = 1
         for _ in tqdm(range(test_time)):
 
             Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset, custom_string=self.custom_string)
@@ -82,6 +82,8 @@ class unlearnable_captcha():
             # print(test_img.shape)
             # cv2.imwrite('attacked.jpg', np.array(a_img[0]*255).astype(np.uint8))
             # cv2.imwrite('attacked2.jpg', np.array(a_img[1]*255).astype(np.uint8))
+            
+            cv2.imwrite('att3.jpg', np.array(a_img[0]*255).astype(np.uint8))
         
         print(f'proxy model accuracy: {(s+f)/test_time*100}%')
         print(f'attack success: {s}/{s+f}, {100*s/(s+f):.2f}%')
