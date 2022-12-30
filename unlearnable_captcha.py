@@ -5,7 +5,7 @@ from captcha_seqence import CaptchaSequence
 from modelA import modelA
 from attack_model import attack_Model
 from tqdm import tqdm
-import skimage
+#import skimage
 #from skimage import data
 #from skimage import transform
 
