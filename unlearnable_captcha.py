@@ -11,14 +11,18 @@ from tqdm import tqdm
 
 
 class unlearnable_captcha():
-    def __init__(self, height=64, width=128, n_len=4, n_class=36) -> None:
+    def __init__(self, height=64, width=128, n_len=4, n_class=36, custom_string=None) -> None:
         self.height = height
         self.width = width
         self.n_len = n_len
         self.proxy_model = None
         self.n_class = n_class
+        self.custom_string = custom_string
         # to-do : Not sure initialize dataset
-        self.dataset = 'python_captcha'
+        if(self.custom_string is not None):
+            self.dataset = 'custom'
+        else:
+            self.dataset = 'python_captcha'
         #self.dataset =skimage.transform.resize(self.dataset,(64,128))
 
 
@@ -29,20 +33,20 @@ class unlearnable_captcha():
         self.proxy_model = modelA(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
-    def load_proxy_model(self, model_path='./pretrained/cnn_best.h5', test=False) -> None:
+    def load_proxy_model(self, model_path='./pretrained/cnn_best.h5', test=True) -> None:
         # load pretrained model
         self.proxy_model = modelA(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.load_model(model_path)
         # test pretrained model
         if(test):
-            Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset)
+            Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset, custom_string=self.custom_string)
             test_img, test_y = Gen[0]
             # test if model is 
             test_pred = self._proxy_model_predict(test_img)
             # decode one-hot label back to string
             test_y = self._decode(test_y)
-            print(test_y)
-            print(test_pred)
+            print(f'ground truth: {test_y}')
+            print(f'predicted: {test_pred}')
 
     def _proxy_model_predict(self, X) -> list:
         return self.proxy_model.predict(X)
@@ -57,7 +61,7 @@ class unlearnable_captcha():
         test_time = 50
         for _ in tqdm(range(test_time)):
 
-            Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset)
+            Gen = CaptchaSequence(batch_size=1, steps=1, dataset=self.dataset, custom_string=self.custom_string)
             test_img, one_hot_y = Gen[0]
             # test if model is 
             test_pred = self._proxy_model_predict(test_img)
@@ -65,8 +69,8 @@ class unlearnable_captcha():
             test_y = self._decode(one_hot_y)
             print(f'ground truth: {test_y}')
             print(f'predicted: {test_pred}')
-            # cv2.imwrite('ori.jpg', np.array(test_img[0]*255).astype(np.uint8))
-            # cv2.imwrite('ori2.jpg', np.array(test_img[1]*255).astype(np.uint8))
+            cv2.imwrite('ori3.jpg', np.array(test_img[0]*255).astype(np.uint8))
+            # cv2.imwrite('ori4.jpg', np.array(test_img[1]*255).astype(np.uint8))
             a_img = attack_model.attack('iFGSM', test_img, test_y, one_hot_y, self.proxy_model, iterative=True)
             a_pred = self._proxy_model_predict(a_img)
             

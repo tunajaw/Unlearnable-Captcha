@@ -20,11 +20,13 @@ Adjust model name in `attack_model.attack()` in `unlearnable_captcha.attack()`, 
 
 ### Arguments
 
-`-c`: CAPTCHA classes (default: 36 -> Uppercase characters + numbers)
+`-n`: CAPTCHA classes number (default: 36 -> Uppercase characters + numbers)
 
 `-s`: CAPTCHA size, width height (default: 160px x 60px)
 
 `-l`: CAPTCHA length (default: 4 characters per CAPTCHA)
+
+`-c`: CAPTCHA user customized string (default: None)
 
 ## TO-do lists
 
