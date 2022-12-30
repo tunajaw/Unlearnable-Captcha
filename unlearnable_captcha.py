@@ -3,6 +3,7 @@ import numpy as np
 import string
 from captcha_seqence import CaptchaSequence
 from modelA import modelA
+from modelB import modelB
 from attack_model import attack_Model
 from tqdm import tqdm
 #import skimage
@@ -31,6 +32,7 @@ class unlearnable_captcha():
         Gen_Train = CaptchaSequence(batch_size=batch_size, steps=1000, dataset=dataset)
         Gen_Valid = CaptchaSequence(batch_size=batch_size, steps=100, dataset=dataset)
         self.proxy_model = modelA(height=self.height, width=self.width, n_len=self.n_len, _model=None)
+        # self.proxy_model = modelB(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
     def load_proxy_model(self, model_path='./pretrained/cnn_best.h5', test=True) -> None:
