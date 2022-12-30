@@ -8,7 +8,7 @@ from keras.utils import Sequence
 from single_gen import CaptchaGen
 
 class CaptchaSequence(Sequence):
-    def __init__(self, batch_size, steps, n_len=4, width=128, height=64, dataset=None) -> None:
+    def __init__(self, batch_size, steps, n_len=4, width=128, height=64, dataset=None, custom_string=None) -> None:
         self.characters = string.digits + string.ascii_uppercase
         self.batch_size = batch_size
         self.steps = steps
@@ -16,7 +16,8 @@ class CaptchaSequence(Sequence):
         self.width = width
         self.height = height
         self.n_class = len(self.characters)
-        self.generator = CaptchaGen(dataset=dataset, width=width, height=height, n_len=self.n_len)
+        self.custom_string = custom_string
+        self.generator = CaptchaGen(dataset=dataset, width=width, height=height, n_len=self.n_len, custom_string=custom_string)
     
     # how many batches to train in a training epoch
     def __len__(self) -> int:
