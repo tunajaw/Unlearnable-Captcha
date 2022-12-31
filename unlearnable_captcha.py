@@ -46,7 +46,7 @@ class unlearnable_captcha():
         # self.proxy_model = modelB(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
-    def load_proxy_model(self, model='modelA', test=False) -> None:
+    def load_proxy_model(self, model='modelB', test=False) -> None:
         # load pretrained model
         print(f'load pretrained proxy model: {model}')
         if(model not in self.IMPLEMENTED_MODELS):
@@ -97,15 +97,16 @@ class unlearnable_captcha():
         # print(test_pred)
         return test_img, a_img, test_y
     
-    def attack(self, attacked_model=['model_B'], imgs=100, method='iFGSM', iter_atk=True):
+    def attack(self, attacked_model=['model_B'], imgs=100, method='iFGSM', iter_atk=True, test_img_show=True):
         for amodel in attacked_model:
             self.load_attacked_model(str(amodel))
             s, f = 0, 0
             test_time = imgs
-            for _ in tqdm(range(imgs)):
+            for _ in tqdm(range(100)):
                 ori_img, a_img, test_y = self.gen_attack_img(gen_imgs=1, method=method, iter_atk=iter_atk)
-                # cv2.imwrite('ori.jpg', np.array(ori_img[0]*255).astype(np.uint8))
-                # cv2.imwrite('att.jpg', np.array(a_img[0]*255).astype(np.uint8))
+                if(test_img_show):
+                    cv2.imwrite('ori.jpg', np.array(ori_img[0]*255).astype(np.uint8))
+                    cv2.imwrite('att.jpg', np.array(a_img[0]*255).astype(np.uint8))
                 test_pred = self.cur_attack_model.predict(ori_img)
                 a_pred = self.cur_attack_model.predict(a_img)
                 print(f'ground truth: {test_y}')
