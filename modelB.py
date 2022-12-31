@@ -26,29 +26,21 @@ class modelB():
         input_tensor = Input((height, width, 3))
 
         x = input_tensor
-        x = Conv2D(64, kernel_size=3)(x)
-        x = BatchNormalization()(x)
-        x = Activation('relu')(x)
-        x = MaxPooling2D((2, 2))(x)
-        # x = Dropout(0.25)(x)
+        for i in range(4):
+            # i = i + 1
+            if(i > 3):
+                i = 2
+            x = Conv2D(16*2**i, 3, padding='same')(x)
+            x = BatchNormalization()(x)
+            x = Activation('relu')(x)
+            x = Conv2D(16*2**i, 3, padding='same')(x)
+            # x = BatchNormalization()(x)
+            x = Activation('relu')(x)
+            x = Conv2D(16*2**i, 3, padding='same')(x)
+            x = BatchNormalization()(x)
+            x = Activation('relu')(x)
+            x = MaxPooling2D(2)(x)
 
-        x = Conv2D(64, kernel_size=3)(x)
-        x = BatchNormalization()(x)
-        x = Activation('relu')(x)
-        x = MaxPooling2D((2, 2))(x)
-        # x = Dropout(0.25)(x)
-
-        x = Conv2D(64*2, kernel_size=3)(x)
-        x = BatchNormalization()(x)
-        x = Activation('relu')(x)
-        x = MaxPooling2D((2, 2))(x)
-        # x = Dropout(0.25)(x)
-        
-        x = Conv2D(64*2, kernel_size=3)(x)
-        x = BatchNormalization()(x)
-        x = Activation('relu')(x)
-        x = MaxPooling2D((2, 2))(x)
-        # x = Dropout(0.25)(x)
 
         x = Flatten()(x)
         x = [Dense(n_class, activation='softmax', name='c%d'%(i+1))(x) for i in range(n_len)]
