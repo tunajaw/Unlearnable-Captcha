@@ -73,7 +73,7 @@ class unlearnable_captcha():
             print(f'predicted: {test_pred}')
             cv2.imwrite('ori3.jpg', np.array(test_img[0]*255).astype(np.uint8))
             # cv2.imwrite('ori4.jpg', np.array(test_img[1]*255).astype(np.uint8))
-            a_img = attack_model.attack('iFGSM', test_img, test_y, one_hot_y, self.proxy_model, iterative=True)
+            a_img = attack_model.attack('MI_FGSM', test_img, test_y, one_hot_y, self.proxy_model, iterative=True)
             a_pred = self._proxy_model_predict(a_img)
             
             print(f'after attack: {a_pred}')
@@ -82,7 +82,7 @@ class unlearnable_captcha():
             elif((test_pred[0]==test_y[0]) and (test_pred[0]==a_pred[0])): f += 1
             
             # print(test_img.shape)
-            # cv2.imwrite('attacked.jpg', np.array(a_img[0]*255).astype(np.uint8))
+            cv2.imwrite('attacked.jpg', np.array(a_img[0]*255).astype(np.uint8))
             # cv2.imwrite('attacked2.jpg', np.array(a_img[1]*255).astype(np.uint8))
         
         print(f'proxy model accuracy: {(s+f)/test_time*100}%')
