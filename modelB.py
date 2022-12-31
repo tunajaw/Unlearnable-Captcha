@@ -53,6 +53,8 @@ class modelB():
         x = Flatten()(x)
         x = [Dense(n_class, activation='softmax', name='c%d'%(i+1))(x) for i in range(n_len)]
         self._model = Model(inputs=input_tensor, outputs=x)
+        self.n_len = n_len
+        self.n_class = n_class
 
     def _plot_model(self) -> None:
         plot_model(self._model, to_file="model.png", show_shapes=True)
@@ -75,7 +77,7 @@ class modelB():
     def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)
             np.expand_dims(X, axis=0)
-        predict_prob = self._model.predict(X)
+        predict_prob = self._model.predict(X, verbose=0)
         predict_characters = self.decode(predict_prob)
         
         return np.array(predict_characters)
