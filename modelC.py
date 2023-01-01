@@ -16,7 +16,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 
-class modelB():
+class modelC():
     def __init__(self, height=64, width=128, n_len=4, n_class=36, _model=None) -> None:
         '''
         CAPTCHA Break Model.
