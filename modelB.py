@@ -1,7 +1,8 @@
 
 from keras.models import *
 from keras.layers import *
-from keras.utils import plot_model
+#from keras.utils import plot_model
+from keras.utils.vis_utils import plot_model
 from IPython import display
 from tqdm import tqdm
 from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint

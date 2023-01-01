@@ -4,7 +4,8 @@ import numpy as np
 import random
 import tensorflow as tf
 import keras.backend as K
-from keras.utils import Sequence
+#from keras.utils import Sequence
+from tensorflow.keras.utils import Sequence
 from single_gen import CaptchaGen
 
 class CaptchaSequence(Sequence):
