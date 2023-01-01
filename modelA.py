@@ -2,13 +2,15 @@
 
 from keras.models import *
 from keras.layers import *
-from keras.utils import plot_model
+#from keras.utils import plot_model
+from keras.utils.vis_utils import plot_model
 from IPython import display
 from tqdm import tqdm
 from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 from keras.optimizers import *
 import numpy as np
 import string
+
 
 class modelA():
     def __init__(self, height=64, width=128, n_len=4, n_class=36, _model=None) -> None:
@@ -50,8 +52,9 @@ class modelA():
         callbacks = [EarlyStopping(patience=3), CSVLogger('cnn.csv'), ModelCheckpoint('cnn_best.h5', save_best_only=True)]
 
         self._model.compile(loss='categorical_crossentropy',
-                    optimizer=Adam(1e-3, amsgrad=True), 
+                    optimizer =adam_v2.Adam(1e-3, amsgrad=True), 
                     metrics=['accuracy'])
+
         self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks)
     
