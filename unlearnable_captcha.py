@@ -37,7 +37,7 @@ class unlearnable_captcha():
         #self.dataset =skimage.transform.resize(self.dataset,(64,128))
 
 
-    def train(self, batch_size=128, dataset=None, model='modelA') -> None:
+    def train(self, batch_size=128, dataset=None, model='modelC') -> None:
         if(model not in self.IMPLEMENTED_MODELS):
             raise ValueError(f'{model} is not implemented.')
         self.dataset = dataset
@@ -47,7 +47,7 @@ class unlearnable_captcha():
         # self.proxy_model = modelB(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
-    def load_proxy_model(self, model='modelA', test=False) -> None:
+    def load_proxy_model(self, model='modelC', test=False) -> None:
         # load pretrained model
         print(f'load pretrained proxy model: {model}')
         if(model not in self.IMPLEMENTED_MODELS):

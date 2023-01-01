@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 from captcha_seqence import CaptchaSequence
 from unlearnable_captcha import unlearnable_captcha
-
+import tensorflow as tf
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
