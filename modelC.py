@@ -68,7 +68,7 @@ class modelC():
         #            metrics=['accuracy'],  steps_per_execution=1)
         self._model.compile(optimizer=keras.optimizers.Adam(), loss="categorical_crossentropy", metrics="accuracy")
         
-        self._model.fit(train_generator, validation_data=test_generator, epochs=30)    
+        self._model.fit(train_generator, validation_data=test_generator, epochs=10)    
         # self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
         #                     callbacks=callbacks,
         #                     steps_per_epoch = 2000)
