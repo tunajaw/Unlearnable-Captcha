@@ -4,6 +4,7 @@ import string
 from captcha_seqence import CaptchaSequence
 from modelA import modelA
 from modelB import modelB
+from modelC import modelC
 from attack_model import attack_Model
 from tqdm import tqdm
 import sys
@@ -15,7 +16,7 @@ import sys
 class unlearnable_captcha():
     def __init__(self, height=64, width=128, n_len=4, n_class=36, custom_string=None) -> None:
         # constants
-        self.IMPLEMENTED_MODELS = ('modelA', 'modelB')
+        self.IMPLEMENTED_MODELS = ('modelA', 'modelB', 'modelC')
         self.PRETRAINED_MODEL_PATH = {
             'modelA': './pretrained/cnn_best.h5',
             'modelB': './pretrained/cnn_best_B.h5'
@@ -36,7 +37,7 @@ class unlearnable_captcha():
         #self.dataset =skimage.transform.resize(self.dataset,(64,128))
 
 
-    def train(self, batch_size=128, dataset=None, model='modelB') -> None:
+    def train(self, batch_size=128, dataset=None, model='modelA') -> None:
         if(model not in self.IMPLEMENTED_MODELS):
             raise ValueError(f'{model} is not implemented.')
         self.dataset = dataset
@@ -46,7 +47,7 @@ class unlearnable_captcha():
         # self.proxy_model = modelB(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
-    def load_proxy_model(self, model='modelB', test=False) -> None:
+    def load_proxy_model(self, model='modelA', test=False) -> None:
         # load pretrained model
         print(f'load pretrained proxy model: {model}')
         if(model not in self.IMPLEMENTED_MODELS):
