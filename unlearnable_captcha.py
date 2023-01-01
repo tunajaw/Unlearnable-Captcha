@@ -19,7 +19,7 @@ class unlearnable_captcha():
         self.IMPLEMENTED_MODELS = ('modelA', 'modelB', 'modelC')
         self.PRETRAINED_MODEL_PATH = {
             'modelA': './pretrained/cnn_best.h5',
-            'modelB': './pretrained/cnn_best_B.h5'
+            'modelB': './pretrained/cnn_bestB.h5'
         }
         # variables
         self.height = height

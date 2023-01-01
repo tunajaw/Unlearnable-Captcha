@@ -20,9 +20,9 @@ Adjust model name in `attack_model.attack()` in `unlearnable_captcha.attack()`, 
 
 ### Arguments
 
-`-n`: CAPTCHA classes number (default: 36 -> Uppercase characters + numbers)
+`-p`: Specify proxy model (default: modelA)
 
-`-s`: CAPTCHA size, width height (default: 160px x 60px)
+`-n`: CAPTCHA classes number (default: 36 -> Uppercase characters + numbers)
 
 `-l`: CAPTCHA length (default: 4 characters per CAPTCHA)
 

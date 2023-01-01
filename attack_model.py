@@ -11,7 +11,7 @@ class attack_Model():
         # constants: must update when more attack methods are added into this repo.
         self.IMPLEMENTED_ATTACKS = ('FGSM', 'iFGSM', 'MI_FGSM')
         # variables
-        self.epsilon = 32.0 / 256
+        self.epsilon = 16.0 / 256
         self.n_class = n_class
         self._attack_method = {}
         if(attack_method == None):
