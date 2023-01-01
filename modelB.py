@@ -64,7 +64,8 @@ class modelB():
                     metrics=['accuracy'],
                     steps_per_execution=1)
         self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
-                            callbacks=callbacks)
+                            callbacks=callbacks,
+                            steps_per_epoch = 2000)
     
     def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)
