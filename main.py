@@ -26,6 +26,6 @@ if __name__ == "__main__":
         captcha.load_proxy_model()
 
     if(args.attack):
-        captcha.attack()
+        captcha.attack(attacked_model=['modelA'], method='iFGSM')
     
     

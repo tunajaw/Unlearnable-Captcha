@@ -10,6 +10,7 @@ from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint
 from keras.optimizers import *
 import numpy as np
 import string
+from keras.optimizers import Adam
 
 
 class modelA():
@@ -98,3 +99,4 @@ class modelA():
             captcha = ''.join(self.characters[z] for z in single[0])
             predict_characters.append(captcha)
         return np.array(predict_characters)
+
