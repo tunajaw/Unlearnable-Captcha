@@ -69,9 +69,9 @@ class modelC():
         self._model.compile(optimizer=keras.optimizers.Adam(), loss="sparse_categorical_crossentropy", metrics="accuracy")
         
                   
-        self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
+        self._model.fit(train_generator, epochs=100, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks,
-                            steps_per_epoch = 2000)
+                            steps_per_epoch = 1000)
     
     def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)

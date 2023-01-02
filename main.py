@@ -18,7 +18,7 @@ if __name__ == "__main__":
     captcha = unlearnable_captcha(n_len=args.len, n_class=args.nclass, custom_string=args.customize)
 
     if(args.train):
-        captcha.train(batch_size=128, dataset=args.dataset, model='modelB')
+        captcha.train(batch_size=128, dataset=args.dataset, model='modelC')
     else:
         captcha.load_proxy_model(model=args.proxy_model)
 
