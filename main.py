@@ -32,5 +32,5 @@ if __name__ == "__main__":
         captcha.uCaptchaGenerator(method='FGSM', iter_atk=True, aModel='modelA', img_num = 1)
     
     if(args.random_customize):
-        captcha.uCaptchaGenerator(method='FGSM', iter_atk=True, aModel='modelA', img_num = args.random_customize)
+        captcha.uCaptchaGenerator(method='FGSM', iter_atk=True, aModel='modelC', img_num = args.random_customize)
     
