@@ -8,6 +8,9 @@ from modelC import modelC
 from attack_model import attack_Model
 from tqdm import tqdm
 import sys
+import matplotlib.pyplot as plt
+# from PIL import Image
+import random
 #import skimage
 #from skimage import data
 #from skimage import transform
@@ -37,7 +40,7 @@ class unlearnable_captcha():
         #self.dataset =skimage.transform.resize(self.dataset,(64,128))
 
 
-    def train(self, batch_size=128, dataset=None, model='modelC') -> None:
+    def train(self, batch_size=128, dataset=None, model='modelA') -> None:
         if(model not in self.IMPLEMENTED_MODELS):
             raise ValueError(f'{model} is not implemented.')
         self.dataset = dataset
@@ -47,7 +50,7 @@ class unlearnable_captcha():
         # self.proxy_model = modelB(height=self.height, width=self.width, n_len=self.n_len, _model=None)
         self.proxy_model.train(Gen_Train, Gen_Valid)
 
-    def load_proxy_model(self, model='modelC', test=False) -> None:
+    def load_proxy_model(self, model='modelA', test=False) -> None:
         # load pretrained model
         print(f'load pretrained proxy model: {model}')
         if(model not in self.IMPLEMENTED_MODELS):
@@ -85,7 +88,10 @@ class unlearnable_captcha():
         '''
         attack_model = attack_Model(self.n_class)
         test_time = gen_imgs
-        Gen = CaptchaSequence(batch_size=test_time, steps=1, dataset=self.dataset, custom_string=self.custom_string)
+        if(gen_imgs==1):
+            Gen = CaptchaSequence(batch_size=test_time, steps=1, dataset=self.dataset, custom_string=self.custom_string)
+        else:
+            Gen = CaptchaSequence(batch_size=test_time, steps=1, dataset=self.dataset, custom_string=captcha_str)
         test_img, one_hot_y = Gen[0]
         
         # decode one-hot label back to string
@@ -120,3 +126,40 @@ class unlearnable_captcha():
             print(f'proxy model accuracy: {(s+f)/test_time*100}%')
             print(f'attack success: {s}/{s+f}, {100*s/(s+f):.2f}%')
             print(f'attack failed: {f}/{s+f}, {100*f/(s+f):.2f}%')
+
+    def uCaptchaGenerator(self, method='iFGSM', iter_atk=True, aModel='modelA', img_num = 1):
+        self.load_attacked_model(str(aModel))
+        if(img_num == 1):
+            ori_img, a_img, label = self.gen_attack_img(gen_imgs=1, method=method, iter_atk=iter_atk, captcha_str=self.custom_string)
+            ori_img = (ori_img[0]*255).astype(np.uint8)
+            a_img = (a_img[0]*255).astype(np.uint8)
+            # plt.subplot(1, 2, 1)
+            # plt.title(label)
+            # plt.imshow(ori_img)
+            # plt.subplot(1, 2, 2)
+            # plt.title(label)
+            # plt.imshow(a_img)
+            # plt.show()
+
+            return ori_img, a_img, label
+        else:
+            X_ori = [0] * img_num
+            X_a = [0] * img_num
+            y = [0] * img_num
+            characters = string.digits + string.ascii_uppercase
+            for i in range(img_num):
+                random_str = ''.join([random.choice(characters) for j in range(self.n_len)])
+                ori_img, a_img, label = self.gen_attack_img(gen_imgs=1, method=method, iter_atk=iter_atk, captcha_str=random_str)
+                ori_img = (ori_img[0]*255).astype(np.uint8)
+                a_img = (a_img[0]*255).astype(np.uint8)
+                X_ori[i] = ori_img
+                X_a[i] = a_img
+                y[i] = label
+                # plt.subplot(1, 2, 1)
+                # plt.title(label)
+                # plt.imshow(ori_img)
+                # plt.subplot(1, 2, 2)
+                # plt.title(label)
+                # plt.imshow(a_img)
+                # plt.show()
+            return X_ori, X_a, y

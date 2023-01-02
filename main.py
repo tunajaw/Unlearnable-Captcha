@@ -15,6 +15,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--customize", required=False, type=str, default=None) 
     parser.add_argument("-t", "--train", action="store_true")
     parser.add_argument("-a", "--attack", action="store_true")
+    parser.add_argument("-z", "--random_customize", required= False, type=int)
 
     args = parser.parse_args()
 
@@ -29,4 +30,9 @@ if __name__ == "__main__":
     if(args.attack):
         captcha.attack(attacked_model=['modelA'], method='iFGSM')
     
+    if(args.customize):
+        captcha.uCaptchaGenerator(method='FGSM', iter_atk=True, aModel='modelA', img_num = 1)
+    
+    if(args.random_customize):
+        captcha.uCaptchaGenerator(method='FGSM', iter_atk=True, aModel='modelA', img_num = args.random_customize)
     
