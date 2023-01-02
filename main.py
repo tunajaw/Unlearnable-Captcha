@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 from captcha_seqence import CaptchaSequence
 from unlearnable_captcha import unlearnable_captcha
-
+import tensorflow as tf
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -21,6 +21,7 @@ if __name__ == "__main__":
     captcha = unlearnable_captcha(n_len=args.len, n_class=args.nclass, custom_string=args.customize)
 
     if(args.train):
+        # with tf.device('/cpu:0'):
         captcha.train(batch_size=128, dataset=args.dataset)
     else:
         captcha.load_proxy_model()
