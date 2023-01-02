@@ -1,5 +1,6 @@
 import argparse
 from unlearnable_captcha import unlearnable_captcha
+import tensorflow as tf
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -12,17 +13,24 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--proxy_model", required=False, type=str, default='modelB')
     parser.add_argument("-t", "--train", action="store_true")
     parser.add_argument("-a", "--attack", action="store_true")
+    parser.add_argument("-z", "--random_customize", required= False, type=int)
 
     args = parser.parse_args()
 
     captcha = unlearnable_captcha(n_len=args.len, n_class=args.nclass, custom_string=args.customize)
 
     if(args.train):
-        captcha.train(batch_size=128, dataset=args.dataset, model='modelC')
+        # with tf.device('/cpu:0'):
+        captcha.train(batch_size=128, dataset=args.dataset)
     else:
         captcha.load_proxy_model(model=args.proxy_model)
 
     if(args.attack):
         captcha.attack(attacked_model=['modelB'], method='FGSM', iter_atk=False, test_img_show=True)
     
+    if(args.customize):
+        captcha.uCaptchaGenerator(method='FGSM', iter_atk=True, aModel='modelA', img_num = 1)
+    
+    if(args.random_customize):
+        captcha.uCaptchaGenerator(method='FGSM', iter_atk=True, aModel='modelA', img_num = args.random_customize)
     

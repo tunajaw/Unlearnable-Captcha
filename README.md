@@ -9,6 +9,9 @@ Run `python main.py -t` to train model.
 ### Attack
 Run `python main.py -a` to attack images.
 
+### Attack
+Run `python main.py -z 10` to generate 10 attacked images.
+
 Implemented attack model:
 
 * FGSM
@@ -27,6 +30,8 @@ Adjust model name in `attack_model.attack()` in `unlearnable_captcha.attack()`, 
 `-l`: CAPTCHA length (default: 4 characters per CAPTCHA)
 
 `-c`: CAPTCHA user customized string (default: None)
+
+`-z`: CAPTCHA random attacked string 
 
 ## TO-do lists
 

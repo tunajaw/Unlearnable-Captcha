@@ -34,19 +34,19 @@ class modelC():
 
         x = input_tensor
         
-        x = Conv2D(32,(3, 3),activation="relu",kernel_initializer="he_normal",padding="same",name="Conv1")(x)
+        x = Conv2D(64,(3, 3),activation="relu",kernel_initializer="he_normal",padding="same",name="Conv1")(x)
         x = MaxPooling2D((2, 2), name="pool1")(x)
-        x = Conv2D(64,(3, 3),activation="relu",kernel_initializer="he_normal",padding="same",name="Conv2")(x)
+        x = Conv2D(120,(3, 3),activation="relu",kernel_initializer="he_normal",padding="same",name="Conv2")(x)
         x = MaxPooling2D((2, 2), name="pool2")(x)
-        x =Reshape(target_shape=(n_len,98304//n_len), name="reshape")(x)
+        x = Reshape(target_shape=(n_len,61440//n_len), name="reshape")(x)
         # x = BatchNormalization()(x)
-        x = Dense(256, activation="relu", name="dense1")(x)
-        x = Dense(64, activation="relu", name="dense2")(x)
+        x = Dense(512, activation="relu", name="dense1")(x)
+        x = Dense(144, activation="relu", name="dense2")(x)
         #x = Dense(36, activation="softmax", name="dense3")(x)
         #x = Activation('relu')(x)
         #x = MaxPooling2D(2)(x)
 
-
+        # output = Dense(36, activation="softmax", name="dense3")(x) 
         x = Flatten()(x)
         x = [Dense(n_class, activation='softmax', name='c%d'%(i+1))(x) for i in range(n_len)]
         self._model = Model(inputs=input_tensor, outputs=x)
@@ -62,16 +62,15 @@ class modelC():
     def train(self, train_generator, test_generator) -> None:
         # self._plot_model()
         callbacks = [EarlyStopping(patience=3), CSVLogger('cnn.csv'), ModelCheckpoint('cnn_best.h5', save_best_only=True)]
-
+        self._model.summary()
         #self._model.compile(loss='categorical_crossentropy',
         #            optimizer=Adam(1e-4, amsgrad=True), 
         #            metrics=['accuracy'],  steps_per_execution=1)
-        self._model.compile(optimizer=keras.optimizers.Adam(), loss="sparse_categorical_crossentropy", metrics="accuracy")
+        self._model.compile(optimizer=keras.optimizers.Adam(), loss="categorical_crossentropy", metrics="accuracy")
         
-                  
-        self._model.fit(train_generator, epochs=100, validation_data=test_generator, workers=4, use_multiprocessing=True,
-                            callbacks=callbacks,
-                            steps_per_epoch = 1000)
+        #self._model.fit(train_generator, validation_data=test_generator, epochs=10)    
+        self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
+                            callbacks=callbacks, steps_per_epoch = 2000)
     
     def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)
