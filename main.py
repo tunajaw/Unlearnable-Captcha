@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     if(args.train):
         # with tf.device('/cpu:0'):
-        captcha.train(batch_size=128, dataset=args.dataset)
+        captcha.train(batch_size=128, dataset=args.dataset, model='modelC')
     else:
         captcha.load_proxy_model(model=args.proxy_model)
 

@@ -57,8 +57,9 @@ class modelA():
                     optimizer =adam_v2.Adam(1e-3, amsgrad=True), 
                     metrics=['accuracy'])
 
-        self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
-                            callbacks=callbacks)
+        self._model.fit(train_generator, epochs=100, validation_data=test_generator, workers=4, use_multiprocessing=True,
+                            callbacks=callbacks,
+                            steps_per_epoch = 500)
     
     def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)

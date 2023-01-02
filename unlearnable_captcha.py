@@ -40,7 +40,7 @@ class unlearnable_captcha():
         #self.dataset =skimage.transform.resize(self.dataset,(64,128))
 
 
-    def train(self, batch_size=128, dataset=None, model='modelA') -> None:
+    def train(self, batch_size=128, dataset=None, model='modelC') -> None:
         if(model not in self.IMPLEMENTED_MODELS):
             raise ValueError(f'{model} is not implemented.')
         self.dataset = dataset

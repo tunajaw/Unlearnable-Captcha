@@ -57,15 +57,15 @@ class modelB():
 
     def train(self, train_generator, test_generator) -> None:
         # self._plot_model()
-        callbacks = [EarlyStopping(patience=3), CSVLogger('cnn.csv'), ModelCheckpoint('cnn_best.h5', save_best_only=True)]
+        callbacks = [EarlyStopping(patience=2), CSVLogger('cnn.csv'), ModelCheckpoint('./pretrained/cnn_best_B.h5', save_best_only=True)]
 
         self._model.compile(loss='categorical_crossentropy',
                     optimizer=Adam(1e-3, amsgrad=True), 
                     metrics=['accuracy'],
                     steps_per_execution=1)
-        self._model.fit(train_generator, epochs=1, validation_data=test_generator, workers=4, use_multiprocessing=True,
+        self._model.fit(train_generator, epochs=200, validation_data=test_generator, workers=4, use_multiprocessing=True,
                             callbacks=callbacks,
-                            steps_per_epoch = 2000)
+                            steps_per_epoch = 500)
     
     def predict(self, X) -> np.ndarray:
         if X.ndim == 3:  # (width, height, channel)
